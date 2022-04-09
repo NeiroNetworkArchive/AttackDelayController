@@ -20,12 +20,15 @@ class Main extends PluginBase implements Listener{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 	}
 	
+	/*
+	 * @priority MONITER
+	 */
 	public function onEntityDamageByEntityEvent(EntityDamageByEntityEvent $event){
 		$entity = $event->getEntity();
 		if($entity instanceof Player){
 			if(self::$cooltime[$entity->getName()] === 1){
 				$event->cancel();
-			}else{
+			}elseif(!$event->isCancelled()){
 				self::$cooltime[$entity->getName()] = 1;
 				$this->getScheduler()->scheduleDelayedTask(new Cooldown($entity), 10);
 			}
